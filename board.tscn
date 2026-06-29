@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://dkk7fe4gt4y5e"]
+
+[ext_resource type="Script" uid="uid://c38e38w4dng8d" path="res://board.gd" id="1_p0ybc"]
+[ext_resource type="PackedScene" uid="uid://c4aqoohkfbwn6" path="res://stone.tscn" id="2_psm7c"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_psm7c"]
+
+[node name="Board" type="Area2D" unique_id=1462725338]
+script = ExtResource("1_p0ybc")
+stone = ExtResource("2_psm7c")
+size = 600
+dim = 4
+board_color = Color(0.8343986, 0.61231613, 0.2684123, 1)
+stone_space_ratio = 0.9
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=140892459]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=622413336]
+shape = SubResource("RectangleShape2D_psm7c")
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

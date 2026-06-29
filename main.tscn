@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://co5vmnkukjywd"]
+
+[ext_resource type="Script" uid="uid://cci0ng52ughf" path="res://main.gd" id="1_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://dkk7fe4gt4y5e" path="res://board.tscn" id="1_ig7tw"]
+
+[node name="Main" type="Node" unique_id=1923491421]
+script = ExtResource("1_0xm2m")
+
+[node name="Board" parent="." unique_id=1462725338 groups=["stones"] instance=ExtResource("1_ig7tw")]

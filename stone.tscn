@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://c4aqoohkfbwn6"]
+
+[ext_resource type="Texture2D" uid="uid://cvqwuaor64pcm" path="res://assets/stone_b.png" id="1_rq0vd"]
+[ext_resource type="Texture2D" uid="uid://bwfjeyjsrunwj" path="res://assets/stone_w.png" id="2_cxlo0"]
+[ext_resource type="Script" uid="uid://bcwvf2xkvi1gu" path="res://stone.gd" id="3_cxlo0"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rq0vd"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_rq0vd")
+}],
+"loop": true,
+"name": &"Black",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_cxlo0")
+}],
+"loop": true,
+"name": &"White",
+"speed": 5.0
+}]
+
+[node name="Stone" type="AnimatedSprite2D" unique_id=2076344267]
+sprite_frames = SubResource("SpriteFrames_rq0vd")
+animation = &"Black"
+script = ExtResource("3_cxlo0")
