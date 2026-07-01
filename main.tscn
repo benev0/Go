@@ -7,3 +7,4 @@
 script = ExtResource("1_0xm2m")
 
 [node name="Board" parent="." unique_id=1462725338 groups=["stones"] instance=ExtResource("1_ig7tw")]
+dim = 9

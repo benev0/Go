@@ -19,6 +19,14 @@ func scale_stone(stone_scale: float) -> void:
 func hide_stone() -> void:
 	hide()
 	
+func black() -> void:
+	is_black = true
+	animation = "Black"
+	
+func white() -> void:
+	is_black = false
+	animation = "White"
+	
 func change_color() -> void:
 	is_black = !is_black
 	if is_black:

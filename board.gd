@@ -1,5 +1,7 @@
 extends Area2D
 
+const WeiQiGameState = preload("res://weiqi_game_state.gd")
+
 @export var stone: PackedScene
 # pixel height/width
 @export var size: int
@@ -15,6 +17,9 @@ var stride: int
 var line_len: int
 var stone_size: float
 var ghost_stone: Node
+var stones: Array
+var game: WeiQiGameState
+
 
 func draw_h_line(image: Image, start: Vector2i, lenght: int) -> void:
 	for i in lenght + 1:
@@ -24,6 +29,12 @@ func draw_v_line(image: Image, start: Vector2i, length: int) -> void:
 	for i in length + 1:
 		image.set_pixel(start.x, start.y + i, line_color)
 
+func create_new_stone() -> Node:
+	var new_stone: Node = stone.instantiate()
+	new_stone.scale_stone(stone_size / 128.0)
+	add_child(new_stone)
+	return new_stone
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	mouse_present = false
@@ -31,11 +42,15 @@ func _ready() -> void:
 	stride = size / (dim + 1)
 	line_len = size - 2 * stride
 	stone_size = stride * stone_space_ratio
-	ghost_stone = stone.instantiate()
-	add_child(ghost_stone)
+	ghost_stone = create_new_stone()
+	game = WeiQiGameState.new(dim)
+	game.intesection_captured.connect(_on_stone_captured)
 	
-	ghost_stone.scale_stone(stone_size / 128.0)
-	ghost_stone.place(Vector2(0.0, 0.0))
+	stones = []
+	stones.resize(dim)
+	for i in dim:
+		stones[i] = []
+		stones[i].resize(dim)
 	
 	$CollisionShape2D.shape.size = Vector2(size - stride, size - stride)
 
@@ -62,13 +77,28 @@ func _process(_delta: float) -> void:
 		ghost_stone.hide_stone()
 		return
 	
+	if stones[square.y][square.x] != null:
+		ghost_stone.hide_stone()
+		return
+	
 	var center_offset: int = stride - size / 2
+	
+	if Input.is_action_just_pressed("Click") && game.check_place(square, black_turn):
+		var new_stone: Node = create_new_stone()
+		if !black_turn:
+			new_stone.white()
+		new_stone.place(square * stride + Vector2i(center_offset, center_offset))
+		stones[square.y][square.x] = new_stone
+		black_turn = !black_turn
+		ghost_stone.hide_stone()
+		ghost_stone.change_color()
+		return
+	
 	ghost_stone.place(square * stride + Vector2i(center_offset, center_offset))
 	
-	if Input.is_action_just_pressed("Click"):
-		print(square) #try to place piece
-		print(relitive_mouse)
-	
+func _on_stone_captured(where: Vector2i) -> void:
+	stones[where.y][where.x].queue_free()
+	stones[where.y][where.x] = null
 
 func _on_mouse_entered() -> void:
 	mouse_present = true
