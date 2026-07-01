@@ -8,7 +8,7 @@ var visit_number: int
 # todo: ko
 var ko: Vector2i
 
-signal intesection_captured(position: Vector2i)
+signal intesection_captured(position: Vector2i, is_black: bool)
 
 enum Intersection {EMPTY, BALCK, WHITE}
 
@@ -73,8 +73,8 @@ func confirm_capture() -> int:
 	for row in size:
 		for col in size:
 			if visitation[row][col] == visit_number:
+				intesection_captured.emit(Vector2i(col, row), board[row][col] == Intersection.BALCK)
 				board[row][col] = Intersection.EMPTY
-				intesection_captured.emit(Vector2i(col, row))
 				captured += 1
 	return captured
 

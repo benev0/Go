@@ -10,16 +10,22 @@ const WeiQiGameState = preload("res://weiqi_game_state.gd")
 @export var board_color: Color
 @export var line_color: Color
 @export var stone_space_ratio: float
+@export var stone_alpha: float
 
 var mouse_present: bool
 var black_turn: bool
 var stride: int
 var line_len: int
 var stone_size: float
-var ghost_stone: Node
+var ghost_stone: AnimatedSprite2D
 var stones: Array
 var game: WeiQiGameState
+var score_update: bool
+var black_capture: int
+var white_capture: int
+var last_move_pass: bool
 
+signal new_score(black: int, white: int)
 
 func draw_h_line(image: Image, start: Vector2i, lenght: int) -> void:
 	for i in lenght + 1:
@@ -43,8 +49,13 @@ func _ready() -> void:
 	line_len = size - 2 * stride
 	stone_size = stride * stone_space_ratio
 	ghost_stone = create_new_stone()
+	ghost_stone.modulate.a = stone_alpha
 	game = WeiQiGameState.new(dim)
 	game.intesection_captured.connect(_on_stone_captured)
+	score_update = true
+	black_capture = 0
+	white_capture = 0
+	last_move_pass = false
 	
 	stones = []
 	stones.resize(dim)
@@ -67,6 +78,9 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
+	if score_update:
+		new_score.emit(black_capture, white_capture)
+	
 	if !mouse_present:
 		return
 
@@ -89,16 +103,31 @@ func _process(_delta: float) -> void:
 			new_stone.white()
 		new_stone.place(square * stride + Vector2i(center_offset, center_offset))
 		stones[square.y][square.x] = new_stone
-		black_turn = !black_turn
+		next_turn()
 		ghost_stone.hide_stone()
-		ghost_stone.change_color()
 		return
 	
 	ghost_stone.place(square * stride + Vector2i(center_offset, center_offset))
-	
-func _on_stone_captured(where: Vector2i) -> void:
+
+func pass_turn() -> void:
+	if last_move_pass:
+		# todo: end the game
+		return
+	next_turn(true)
+
+func next_turn(passed: bool = false) -> void:
+	black_turn = !black_turn
+	ghost_stone.change_color()
+	last_move_pass = passed
+
+func _on_stone_captured(where: Vector2i, is_black: bool) -> void:
 	stones[where.y][where.x].queue_free()
 	stones[where.y][where.x] = null
+	if is_black:
+		black_capture += 1
+	else:
+		white_capture += 1
+	score_update = true
 
 func _on_mouse_entered() -> void:
 	mouse_present = true
