@@ -1,6 +1,6 @@
 extends Area2D
 
-const WeiQiGameState = preload("res://weiqi_game_state.gd")
+#const WeiQiGameState = preload("res://weiqi_game_state.gd")
 
 @export var stone: PackedScene
 # pixel height/width
@@ -46,6 +46,7 @@ func _ready() -> void:
 	mouse_present = false
 	black_turn = true
 	stride = size / (dim + 1)
+	size = stride * (dim + 1)
 	line_len = size - 2 * stride
 	stone_size = stride * stone_space_ratio
 	ghost_stone = create_new_stone()
