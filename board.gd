@@ -25,7 +25,7 @@ var black_capture: int
 var white_capture: int
 var last_move_pass: bool
 
-signal new_score(black: int, white: int)
+signal new_score(black_captures: int, white_captures: int)
 
 func draw_h_line(image: Image, start: Vector2i, lenght: int) -> void:
 	for i in lenght + 1:

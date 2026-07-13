@@ -13,6 +13,7 @@ config_version=5
 config/name="Go"
 run/main_scene="uid://co5vmnkukjywd"
 config/features=PackedStringArray("4.6", "GL Compatibility")
+run/max_fps=60
 config/icon="res://icon.svg"
 
 [input]

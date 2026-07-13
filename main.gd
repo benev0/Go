@@ -14,5 +14,5 @@ func _process(_delta: float) -> void:
 func _pass_pressed() -> void:
 	$Board.pass_turn()
 
-func _scores_updated(black: int, white: int) -> void:
-	$UI/Captues.text = "Black: %d White %d" % [black, white]
+func _scores_updated(black_captures: int, white_captures: int) -> void:
+	$UI/Captues.text = "Black: %d White: %d" % [white_captures, black_captures]
