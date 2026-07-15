@@ -11,6 +11,7 @@ extends Area2D
 		size = value
 		if board_size_change():
 			create_board_image()
+			rescale_ghost_stone()
 # the logial size of the board
 @export var dim: int
 @export var board_color: Color
@@ -23,7 +24,7 @@ var black_turn: bool
 var stride: int
 var line_len: int
 var stone_size: float
-var ghost_stone: AnimatedSprite2D
+var ghost_stone: Node
 var stones: Array
 var game: WeiQiGameState
 var score_update: bool
@@ -56,6 +57,11 @@ func board_size_change() -> bool:
 		size = valid_size
 		return false
 	return true
+	
+func rescale_ghost_stone():
+	if ghost_stone == null:
+		return
+	ghost_stone.scale_stone(stone_size / 128.0)
 
 func create_board_image():
 	if !is_node_ready():
