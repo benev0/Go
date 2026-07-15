@@ -4,7 +4,13 @@ extends Area2D
 
 @export var stone: PackedScene
 # pixel height/width
-@export var size: int
+@export var size: int:
+	set(value):
+		if size == value:
+			return
+		size = value
+		if board_size_change():
+			create_board_image()
 # the logial size of the board
 @export var dim: int
 @export var board_color: Color
@@ -41,14 +47,36 @@ func create_new_stone() -> Node:
 	add_child(new_stone)
 	return new_stone
 
-# Called when the node enters the scene tree for the first time.
+func board_size_change() -> bool:
+	stride = size / (dim + 1)
+	var valid_size: int = stride * (dim + 1)
+	line_len = size - 2 * stride
+	stone_size = stride * stone_space_ratio
+	if size != valid_size:
+		size = valid_size
+		return false
+	return true
+
+func create_board_image():
+	if !is_node_ready():
+		return
+		
+	if $Sprite2D.texture != null && $Sprite2D.texture.get_height() == size:
+		return
+	
+	var image: Image = Image.create(size, size, false, Image.FORMAT_RGB8)
+	image.fill(board_color)
+	for i in dim: 
+		var progress: int = (i + 1) * stride 
+		draw_h_line(image, Vector2i(stride, progress), line_len)
+		draw_v_line(image, Vector2i(progress, stride), line_len)
+	var texture: ImageTexture = ImageTexture.create_from_image(image)
+	$Sprite2D.texture = texture
+
 func _ready() -> void:
 	mouse_present = false
 	black_turn = true
-	stride = size / (dim + 1)
-	size = stride * (dim + 1)
-	line_len = size - 2 * stride
-	stone_size = stride * stone_space_ratio
+	board_size_change()
 	ghost_stone = create_new_stone()
 	ghost_stone.modulate.a = stone_alpha
 	game = WeiQiGameState.new(dim)
@@ -65,17 +93,7 @@ func _ready() -> void:
 		stones[i].resize(dim)
 	
 	$CollisionShape2D.shape.size = Vector2(size - stride, size - stride)
-
-	var image: Image = Image.create(size, size, false, Image.FORMAT_RGB8)
-
-	image.fill(board_color)
-	for i in dim: 
-		var progress: int = (i + 1) * stride 
-		draw_h_line(image, Vector2i(stride, progress), line_len)
-		draw_v_line(image, Vector2i(progress, stride), line_len)
-
-	var texture: ImageTexture = ImageTexture.create_from_image(image)
-	$Sprite2D.texture = texture
+	create_board_image()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
@@ -135,3 +153,4 @@ func _on_mouse_entered() -> void:
 
 func _on_mouse_exited() -> void:
 	mouse_present = false
+	ghost_stone.hide_stone()

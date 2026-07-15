@@ -16,7 +16,7 @@ grow_vertical = 2
 size_flags_horizontal = 4
 text = "Pass"
 
-[node name="Captues" type="Label" parent="." unique_id=1670737810]
+[node name="Captures" type="Label" parent="." unique_id=1670737810]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0

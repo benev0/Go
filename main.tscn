@@ -7,8 +7,20 @@
 [node name="Main" type="Node" unique_id=1923491421]
 script = ExtResource("1_0xm2m")
 
-[node name="Board" parent="." unique_id=1462725338 groups=["stones"] instance=ExtResource("1_ig7tw")]
-dim = 8
-stone_alpha = 0.5
-
 [node name="UI" parent="." unique_id=628682128 instance=ExtResource("3_h2yge")]
+
+[node name="Control" type="Control" parent="." unique_id=296109052]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Board" parent="Control" unique_id=1462725338 groups=["stones"] instance=ExtResource("1_ig7tw")]
+dim = 7
+stone_alpha = 0.5
